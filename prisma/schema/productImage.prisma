@@ -1,0 +1,10 @@
+model ProductImage {
+  id                    BigInt   @id @unique @default(autoincrement())
+  src                   String
+  position              String
+  shopifyProductImageId String   @unique
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  productId             BigInt
+  product               Product  @relation(fields: [productId], references: [id])
+}

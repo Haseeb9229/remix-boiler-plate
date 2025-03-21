@@ -1,0 +1,8 @@
+model Setting {
+  id           BigInt     @id @unique @default(autoincrement())
+  text         String
+  pageOptionId BigInt
+  pageOption   PageOption @relation(fields: [pageOptionId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
