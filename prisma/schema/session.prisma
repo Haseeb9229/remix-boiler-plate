@@ -1,5 +1,5 @@
 model Session {
-  session_id    BigInt    @id @unique @default(autoincrement()) @map("_id")
+  session_id    Int    @id @unique @default(autoincrement()) @map("_id")
   id            String    @unique
   shop          String
   state         String
@@ -16,4 +16,5 @@ model Session {
   collaborator  Boolean?  @default(false)
   emailVerified Boolean?  @default(false)
   products      Product[]
+  settings      Setting[]
 }

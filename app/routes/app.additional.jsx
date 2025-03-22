@@ -1,83 +1,119 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/jsx-key */
+/* eslint-disable no-unused-vars */
+import { TitleBar } from "@shopify/app-bridge-react";
 import {
-  Box,
   Card,
   Layout,
-  Link,
-  List,
   Page,
-  Text,
-  BlockStack,
+  DataTable,
+  Spinner,
+  Button
 } from "@shopify/polaris";
-import { TitleBar } from "@shopify/app-bridge-react";
+import { useEffect, useState } from "react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
+import prisma from "../db.server";
+import { authenticate } from "../shopify.server";
+
+export const loader = async ({ request }) => {
+  const auth = await authenticate.admin(request);
+  const session = await prisma.session.findUnique({
+    where: {
+      id: auth.session.id,
+    },
+  });
+  const settings = await prisma.setting.findMany({
+    where: {
+      sessionId: session.session_id,
+    },
+    include: {
+      pageOption: true,
+    },
+  });
+
+  return { data: settings };
+};
+
+export const action = async ({ request }) => {
+  const auth = await authenticate.admin(request);
+  if (request.method === "DELETE") {
+    const formData = await request.formData();
+    const settingId = parseInt(formData.get("settingId"));
+
+    if (!settingId) {
+      return { success: false, error: "Invalid setting ID" };
+    }
+
+    await prisma.setting.delete({
+      where: { id: settingId },
+    });
+
+    const session = await prisma.session.findUnique({
+      where: {
+        id: auth.session.id,
+      },
+    });
+    const settings = await prisma.setting.findMany({
+      where: {
+        sessionId: session.session_id,
+      },
+      include: {
+        pageOption: true,
+      },
+    });
+
+    return { success: true, data: settings };
+  }
+
+  return { success: false, error: "Invalid request method" };
+};
 
 export default function AdditionalPage() {
+  const { data } = useLoaderData();
+  const [settings, setSettings] = useState(data);
+
+  const fetcher = useFetcher();
+
+  const handleDelete = (id) => {
+    fetcher.submit(
+      { settingId: id },
+      { method: "DELETE", action: "/app/additional" }
+    );
+  };
+
+  useEffect(() => {
+    if (fetcher.data?.success) {
+      shopify.toast.show("Page Setting Deleted.")
+      setSettings(fetcher.data.data);
+    }
+    if (fetcher.data?.data) {
+      setSettings(fetcher.data.data);
+    }
+  }, [fetcher.data]);
+
+  const rows = settings.map((setting) => [
+    setting.id,
+    setting.text,
+    setting.pageOption?.title || "N/A",
+    <Button destructive onClick={() => handleDelete(setting.id)}>
+      Delete
+    </Button>,
+  ]);
+
   return (
     <Page>
-      <TitleBar title="Additional page" />
+      <TitleBar title="Settings Table" />
       <Layout>
         <Layout.Section>
-          <Card>
-            <BlockStack gap="300">
-              <Text as="p" variant="bodyMd">
-                The app template comes with an additional page which
-                demonstrates how to create multiple pages within app navigation
-                using{" "}
-                <Link
-                  url="https://shopify.dev/docs/apps/tools/app-bridge"
-                  target="_blank"
-                  removeUnderline
-                >
-                  App Bridge
-                </Link>
-                .
-              </Text>
-              <Text as="p" variant="bodyMd">
-                To create your own page and have it show up in the app
-                navigation, add a page inside <Code>app/routes</Code>, and a
-                link to it in the <Code>&lt;NavMenu&gt;</Code> component found
-                in <Code>app/routes/app.jsx</Code>.
-              </Text>
-            </BlockStack>
-          </Card>
-        </Layout.Section>
-        <Layout.Section variant="oneThird">
-          <Card>
-            <BlockStack gap="200">
-              <Text as="h2" variant="headingMd">
-                Resources
-              </Text>
-              <List>
-                <List.Item>
-                  <Link
-                    url="https://shopify.dev/docs/apps/design-guidelines/navigation#app-nav"
-                    target="_blank"
-                    removeUnderline
-                  >
-                    App nav best practices
-                  </Link>
-                </List.Item>
-              </List>
-            </BlockStack>
+          <Card title="All Settings">
+            <DataTable
+              columnContentTypes={["numeric", "text", "text", "text"]}
+              headings={["ID", "Text", "Page Option", "Action"]}
+              rows={rows}
+            />
           </Card>
         </Layout.Section>
       </Layout>
     </Page>
-  );
-}
-
-function Code({ children }) {
-  return (
-    <Box
-      as="span"
-      padding="025"
-      paddingInlineStart="100"
-      paddingInlineEnd="100"
-      background="bg-surface-active"
-      borderWidth="025"
-      borderColor="border"
-      borderRadius="100"
-    >
-      <code>{children}</code>
-    </Box>
   );
 }

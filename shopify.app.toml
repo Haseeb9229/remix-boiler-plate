@@ -1,25 +1,25 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "cf5863de5385b7b7f7217033011b7f64"
-application_url = "https://consecutive-blow-patterns-diploma.trycloudflare.com"
+client_id = "8005678492facfbc79ed4d824b02116e"
+application_url = "https://examining-possibly-dramatically-pit.trycloudflare.com"
 embedded = true
-name = "RemixBoilerPlate"
-handle = "remixboilerplate"
+name = "remix-boiler-plate"
+handle = "remix-boiler-plate-1"
 
 [build]
-include_config_on_deploy = true
 automatically_update_urls_on_dev = true
+include_config_on_deploy = true
 
 [webhooks]
 api_version = "2025-01"
 
   [[webhooks.subscriptions]]
-  topics = [ "app/uninstalled" ]
-  uri = "/webhooks/app/uninstalled"
-
-  [[webhooks.subscriptions]]
   topics = [ "app/scopes_update" ]
   uri = "/webhooks/app/scopes_update"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -27,9 +27,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://consecutive-blow-patterns-diploma.trycloudflare.com/auth/callback",
-  "https://consecutive-blow-patterns-diploma.trycloudflare.com/auth/shopify/callback",
-  "https://consecutive-blow-patterns-diploma.trycloudflare.com/api/auth/callback"
+  "https://examining-possibly-dramatically-pit.trycloudflare.com/auth/callback",
+  "https://examining-possibly-dramatically-pit.trycloudflare.com/auth/shopify/callback",
+  "https://examining-possibly-dramatically-pit.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

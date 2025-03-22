@@ -1,7 +1,9 @@
 model Setting {
-  id           BigInt     @id @unique @default(autoincrement())
+  id           Int        @id @unique @default(autoincrement())
   text         String
-  pageOptionId BigInt
+  pageOptionId Int
+  sessionId    Int
+  session      Session    @relation(fields: [sessionId], references: [session_id])
   pageOption   PageOption @relation(fields: [pageOptionId], references: [id])
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt

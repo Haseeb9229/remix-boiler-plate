@@ -1,6 +1,15 @@
 -- CreateTable
+CREATE TABLE `PageOption` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `PageOption_id_key`(`id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Product` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `type` VARCHAR(191) NOT NULL,
     `tags` VARCHAR(191) NOT NULL,
@@ -8,6 +17,7 @@ CREATE TABLE `Product` (
     `shopifyProductId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `sessionId` INTEGER NOT NULL,
 
     UNIQUE INDEX `Product_id_key`(`id`),
     UNIQUE INDEX `Product_shopifyProductId_key`(`shopifyProductId`),
@@ -16,13 +26,13 @@ CREATE TABLE `Product` (
 
 -- CreateTable
 CREATE TABLE `ProductImage` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `src` VARCHAR(191) NOT NULL,
     `position` VARCHAR(191) NOT NULL,
     `shopifyProductImageId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
-    `productId` BIGINT NOT NULL,
+    `productId` INTEGER NOT NULL,
 
     UNIQUE INDEX `ProductImage_id_key`(`id`),
     UNIQUE INDEX `ProductImage_shopifyProductImageId_key`(`shopifyProductImageId`),
@@ -31,12 +41,12 @@ CREATE TABLE `ProductImage` (
 
 -- CreateTable
 CREATE TABLE `ProductVariant` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `price` DOUBLE NOT NULL,
     `quantity` INTEGER NOT NULL,
     `shopifyProductVariantId` VARCHAR(191) NOT NULL,
-    `productId` BIGINT NOT NULL,
+    `productId` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -47,7 +57,7 @@ CREATE TABLE `ProductVariant` (
 
 -- CreateTable
 CREATE TABLE `Session` (
-    `_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `_id` INTEGER NOT NULL AUTO_INCREMENT,
     `id` VARCHAR(191) NOT NULL,
     `shop` VARCHAR(191) NOT NULL,
     `state` VARCHAR(191) NOT NULL,
@@ -69,8 +79,26 @@ CREATE TABLE `Session` (
     PRIMARY KEY (`_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `Setting` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `text` VARCHAR(191) NOT NULL,
+    `pageOptionId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `Setting_id_key`(`id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `Product` ADD CONSTRAINT `Product_sessionId_fkey` FOREIGN KEY (`sessionId`) REFERENCES `Session`(`_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
 -- AddForeignKey
 ALTER TABLE `ProductImage` ADD CONSTRAINT `ProductImage_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ProductVariant` ADD CONSTRAINT `ProductVariant_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Setting` ADD CONSTRAINT `Setting_pageOptionId_fkey` FOREIGN KEY (`pageOptionId`) REFERENCES `PageOption`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

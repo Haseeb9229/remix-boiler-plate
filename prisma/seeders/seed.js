@@ -5,12 +5,17 @@ const prisma = new PrismaClient()
 export async function pageOptionSeeder() {
   await prisma.pageOption.create({
     data: {
-      title: 'Home Screen',
+      title: 'Home Page',
     }
   })
   await prisma.pageOption.create({
     data: {
       title: 'Product Page',
+    }
+  })
+  await prisma.pageOption.create({
+    data: {
+      title: 'All Pages',
     }
   })
 }

@@ -1,5 +1,5 @@
 model Product {
-  id               BigInt           @id @unique @default(autoincrement())
+  id               Int           @id @unique @default(autoincrement())
   name             String
   type             String
   tags             String
@@ -7,7 +7,7 @@ model Product {
   shopifyProductId String           @unique
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
-  sessionId        BigInt
+  sessionId        Int
   session          Session          @relation(fields: [sessionId], references: [session_id])
   productVariants  ProductVariant[]
   productImages    ProductImage[]
