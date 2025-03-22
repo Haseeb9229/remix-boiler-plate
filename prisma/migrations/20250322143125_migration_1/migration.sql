@@ -84,6 +84,7 @@ CREATE TABLE `Setting` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `text` VARCHAR(191) NOT NULL,
     `pageOptionId` INTEGER NOT NULL,
+    `sessionId` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -99,6 +100,9 @@ ALTER TABLE `ProductImage` ADD CONSTRAINT `ProductImage_productId_fkey` FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE `ProductVariant` ADD CONSTRAINT `ProductVariant_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Setting` ADD CONSTRAINT `Setting_sessionId_fkey` FOREIGN KEY (`sessionId`) REFERENCES `Session`(`_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Setting` ADD CONSTRAINT `Setting_pageOptionId_fkey` FOREIGN KEY (`pageOptionId`) REFERENCES `PageOption`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
