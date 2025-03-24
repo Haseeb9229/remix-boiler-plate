@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "776dd15bbcf807b6f829ff2ca027259c"
-application_url = "https://mariah-medication-work-classification.trycloudflare.com"
+client_id = "cf5863de5385b7b7f7217033011b7f64"
+application_url = "https://eclipse-novelty-combined-patterns.trycloudflare.com"
 embedded = true
 name = "remix-boiler-plate"
 handle = "remix-boiler-plate-4"
@@ -12,6 +12,13 @@ automatically_update_urls_on_dev = true
 
 [webhooks]
 api_version = "2025-01"
+  [[webhooks.subscriptions]]
+  topics = [ "app/scopes_update" ]
+  uri = "/webhooks/app/scopes_update"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -19,9 +26,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://mariah-medication-work-classification.trycloudflare.com/auth/callback",
-  "https://mariah-medication-work-classification.trycloudflare.com/auth/shopify/callback",
-  "https://mariah-medication-work-classification.trycloudflare.com/api/auth/callback"
+  "https://eclipse-novelty-combined-patterns.trycloudflare.com/auth/callback",
+  "https://eclipse-novelty-combined-patterns.trycloudflare.com/auth/shopify/callback",
+  "https://eclipse-novelty-combined-patterns.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
