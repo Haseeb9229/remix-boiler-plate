@@ -16,6 +16,7 @@ import { authenticate } from "../shopify.server";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import prisma from "../db.server";
+import { getShopSession } from "../../utils/appUtils";
 
 export const loader = async ({ request }) => {
   await authenticate.admin(request);
@@ -34,11 +35,7 @@ export const action = async ({ request }) => {
     return { error: "Please Provide banner text", success: false };
   }
 
-  const session = await prisma.session.findUnique({
-    where: {
-      id: auth.session.id
-    }
-  })
+  const session = await getShopSession(auth.session)
 
   const count = await prisma.setting.count({
     where: {

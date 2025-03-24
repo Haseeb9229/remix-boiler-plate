@@ -14,14 +14,11 @@ import { useEffect, useState } from "react";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import prisma from "../db.server";
 import { authenticate } from "../shopify.server";
+import { getShopSession } from "../../utils/appUtils";
 
 export const loader = async ({ request }) => {
   const auth = await authenticate.admin(request);
-  const session = await prisma.session.findUnique({
-    where: {
-      id: auth.session.id,
-    },
-  });
+  const session = await getShopSession(auth.session);
   const settings = await prisma.setting.findMany({
     where: {
       sessionId: session.session_id,
@@ -48,11 +45,7 @@ export const action = async ({ request }) => {
       where: { id: settingId },
     });
 
-    const session = await prisma.session.findUnique({
-      where: {
-        id: auth.session.id,
-      },
-    });
+    const session = await getShopSession(auth.session)
     const settings = await prisma.setting.findMany({
       where: {
         sessionId: session.session_id,
